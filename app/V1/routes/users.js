@@ -1,6 +1,7 @@
 const express = require('express')
 const routes =express.Router()
 let lstUsers = []
+const services = require('../../services/clients')
 
 
 //ENDPOINT 
@@ -14,32 +15,14 @@ let lstUsers = []
 // == Hace un parseo a cadena y convierte
 // === Verifica el tipo de dato y valor para comparar
 
-routes.get('/', (req, resp)=>{
-  let {asc, limit} = req.query
-  console.log(limit)
-  if(parseInt(asc) === 1) {
-    lstUsers.sort(function (a, b) {
-        if (a.id > b.id) {
-          return 1;
-        }
-        if (a.id > b.id) {
-          return -1;
-        }
-        return 0;
-      });
-  } else {
-    lstUsers.sort(function (a, b) {
-      if (a.id < b.id) {
-        return 1;
-      }
-      if (a.id < b.id) {
-        return -1;
-      }
-      return 0;
-    });
+routes.get('/', async (req, resp)=>{
+  try {
+    let lstUsers = await services.getClients()
+    resp.status(200).send({status: 200, data: lstUsers})
+  } catch (error) {
+    console.log(error)
+    resp.status(500).send({status: 500, msg: "Ocurrio un error"})
   }
-  let newLstUsers = lstUsers.slice(0, limit);
-  resp.status(200).send({status: 200, data: newLstUsers, rows: newLstUsers.length})
 })
 
 routes.get('/:id', (req, resp)=>{

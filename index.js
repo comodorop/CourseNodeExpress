@@ -1,6 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
-const users = require('./routes/users')
+const users = require('./app/V1/routes/users')
  
 const app = express()
 // parse application/x-www-form-urlencoded
@@ -13,6 +14,6 @@ app.use('/V1/users', users)
 
 
 
-app.listen(3001, ()=>{
-  console.log("Server start in port 3001")
+app.listen(process.env.PORT, ()=>{
+  console.log(`Server start in port ${process.env.PORT}`)
 })
