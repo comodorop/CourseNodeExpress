@@ -1,6 +1,6 @@
 const express = require('express')
 const routes =express.Router()
-let lstUsers = []
+
 const services = require('../../services/clients')
 
 
@@ -35,10 +35,15 @@ routes.get('/:id', (req, resp)=>{
   resp.status(200).send({status: 200, data: user})
 })
 
-routes.post('/', (req, resp)=>{
+routes.post('/', async (req, resp)=>{
   let {body} = req
-  lstUsers.push(body)
-  resp.status(201).send({status: 201, data: "New record avaliabled"})
+  try {
+    await services.post(body)  
+    resp.status(201).send({status: 201, data: "New record avaliabled"})
+  } catch (error) {
+    console.log(error)
+    resp.status(500).send({status: 500, data: "There is an error in the server"})
+  }
 })
 
 //http GET, POST, PUT, DELETE
